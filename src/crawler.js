@@ -8,6 +8,7 @@ import { fetchWithCache } from "./client.js";
  * @param {string} startUrl - Initial catalogue page URL
  * @param {number} maxPages - Maximum number of catalogue pages to crawl (default 3)
  * @param {object} [options]
+ * @param {import("./reporter.js").ScrapeReporter} [options.reporter]
  * @returns {Promise<{ cataloguePages: number, discovered: number, uniqueUrls: Array<{ productUrl: string, sourcePage: string }> }>}
  */
 export async function discoverCatalogue(startUrl = "https://books.toscrape.com/catalogue/page-1.html", maxPages = 3, options = {}) {
@@ -18,7 +19,10 @@ export async function discoverCatalogue(startUrl = "https://books.toscrape.com/c
 
   while (currentUrl && pagesProcessed < maxPages) {
     pagesProcessed++;
-    const { html } = await fetchWithCache(currentUrl, options);
+    const { html, fromCache } = await fetchWithCache(currentUrl, options);
+    if (options.reporter) {
+      options.reporter.recordFetch(fromCache);
+    }
     const $ = cheerio.load(html);
 
     // Locate book cards in catalogue

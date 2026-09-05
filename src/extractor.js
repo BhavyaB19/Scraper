@@ -61,9 +61,10 @@ export function extractRawRecord(html, productUrl, sourcePage) {
  * @param {string} productUrl 
  * @param {string} sourcePage 
  * @param {object} [options] 
- * @returns {Promise<object>}
+ * @returns {Promise<{ record: object, fromCache: boolean }>}
  */
 export async function fetchAndExtractBook(productUrl, sourcePage, options = {}) {
-  const { html } = await fetchWithCache(productUrl, options);
-  return extractRawRecord(html, productUrl, sourcePage);
+  const { html, fromCache } = await fetchWithCache(productUrl, options);
+  const record = extractRawRecord(html, productUrl, sourcePage);
+  return { record, fromCache };
 }
