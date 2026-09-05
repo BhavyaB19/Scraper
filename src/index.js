@@ -1,11 +1,13 @@
-import { fetchWithCache } from "./client.js";
+import { discoverCatalogue } from "./crawler.js";
 
 async function main() {
-  const targetUrl = "https://books.toscrape.com/catalogue/page-1.html";
-  console.log(`Starting Stage 1: Fetch and cache test for ${targetUrl}`);
-  
-  const result = await fetchWithCache(targetUrl);
-  console.log(`Result: source=${result.fromCache ? "CACHE HIT" : "FETCH"}, status=${result.status}, size=${result.sizeBytes} bytes`);
+  console.log("=== Stage 2: Discover Three Catalogue Pages ===");
+  const { cataloguePages, discovered, uniqueUrls } = await discoverCatalogue(
+    "https://books.toscrape.com/catalogue/page-1.html",
+    3
+  );
+
+  console.log(`catalogue_pages=${cataloguePages}, discovered=${discovered}, unique_urls=${uniqueUrls.length}`);
 }
 
 main().catch((err) => {
