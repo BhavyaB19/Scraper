@@ -1,10 +1,14 @@
-/**
- * Entry point for the polite scraping pipeline.
- * FlyRank Internship - Backend Track - Assignment A9
- */
+import { fetchWithCache } from "./client.js";
 
-console.log("=== Polite Scraper: Books to Scrape ===");
-console.log("Target: https://books.toscrape.com/");
-console.log("Scope: First 3 catalogue pages (60 books)");
-console.log("Permission: Practice Sandbox (robots.txt: no robots file found)");
-console.log('Commitment: "I will not reuse this code on another site without checking its rules and terms first."');
+async function main() {
+  const targetUrl = "https://books.toscrape.com/catalogue/page-1.html";
+  console.log(`Starting Stage 1: Fetch and cache test for ${targetUrl}`);
+  
+  const result = await fetchWithCache(targetUrl);
+  console.log(`Result: source=${result.fromCache ? "CACHE HIT" : "FETCH"}, status=${result.status}, size=${result.sizeBytes} bytes`);
+}
+
+main().catch((err) => {
+  console.error("Fatal error:", err);
+  process.exit(1);
+});
